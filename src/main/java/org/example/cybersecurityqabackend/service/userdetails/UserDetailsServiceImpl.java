@@ -3,6 +3,7 @@ package org.example.cybersecurityqabackend.service.userdetails;
 import lombok.AllArgsConstructor;
 import org.example.cybersecurityqabackend.entity.User;
 import org.example.cybersecurityqabackend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
