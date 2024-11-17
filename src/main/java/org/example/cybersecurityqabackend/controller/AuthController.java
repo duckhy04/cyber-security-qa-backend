@@ -5,7 +5,6 @@ import org.example.cybersecurityqabackend.dto.JwtAuthResponse;
 import org.example.cybersecurityqabackend.dto.LoginDto;
 import org.example.cybersecurityqabackend.dto.RegisterDto;
 import org.example.cybersecurityqabackend.service.auth.AuthService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
