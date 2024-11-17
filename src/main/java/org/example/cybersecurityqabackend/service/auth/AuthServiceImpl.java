@@ -54,7 +54,8 @@ public class AuthServiceImpl implements AuthService {
         String encodePassword = passwordEncoder.encode(registerDto.getPassword());
 
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName("User").orElseThrow(() -> new RuntimeException("Role not found"));
+        Role userRole = roleRepository.findByName("User")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
         roles.add(userRole);
 
         User user = new User();
@@ -66,6 +67,4 @@ public class AuthServiceImpl implements AuthService {
 
         return "Registered successfully";
     }
-
-
 }
