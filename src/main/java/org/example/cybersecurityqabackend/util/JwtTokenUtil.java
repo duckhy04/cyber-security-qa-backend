@@ -21,24 +21,24 @@ public class JwtTokenUtil {
     private Long expiration;
 
     // Tạo JWT Token
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + expiration);
         return Jwts.builder()
                 .subject(username)
-                .issuedAt(new Date())
+                .issuedAt(currentDate)
                 .expiration(expireDate)
                 .signWith(key())
                 .compact();
     }
 
-    private Key key(){
+    private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 
     // Lấy username từ token
-    public String getUsername(String token){
+    public String getUsername(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) key())
                 .build()
@@ -48,7 +48,7 @@ public class JwtTokenUtil {
     }
 
     // Xác nhận token
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
         Jwts.parser()
                 .verifyWith((SecretKey) key())
                 .build()

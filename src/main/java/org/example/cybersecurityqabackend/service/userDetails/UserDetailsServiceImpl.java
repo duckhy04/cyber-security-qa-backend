@@ -1,4 +1,4 @@
-package org.example.cybersecurityqabackend.service.userdetails;
+package org.example.cybersecurityqabackend.service.userDetails;
 
 import lombok.AllArgsConstructor;
 import org.example.cybersecurityqabackend.entity.User;

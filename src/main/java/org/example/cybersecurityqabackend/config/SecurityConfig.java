@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,7 +31,7 @@ public class SecurityConfig {
 //                    authorizeRequests.requestMatchers("/api/admin").hasRole("ADMIN");
 //                    authorizeRequests.requestMatchers("/api/user").hasAnyRole("USER", "ADMIN");
                     authorizeRequests.anyRequest().authenticated();
-                }).httpBasic(Customizer.withDefaults());
+                });
         http.exceptionHandling(exception -> exception
                 .authenticationEntryPoint(authenticationEntryPoint));
         http.sessionManagement(session -> session
