@@ -15,16 +15,17 @@ import java.util.Date;
 public class JwtTokenUtil {
 
     @Value("${jwt.secret}")
-    private String secretKey;
+    private String jwtSecret;
 
     @Value("${jwt.expiration}")
-    private Long expiration;
+    private long jwtExpirationDate;
 
-    // Tạo JWT Token
-    public String generateToken(Authentication authentication) {
+    // Tạo JWT token
+    public String generateToken(Authentication authentication){
         String username = authentication.getName();
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + expiration);
+        Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(currentDate)
@@ -33,12 +34,12 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    private Key key(){
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    // Lấy username từ token
-    public String getUsername(String token) {
+    // Lấy username từ JWT token
+    public String getUsername(String token){
         return Jwts.parser()
                 .verifyWith((SecretKey) key())
                 .build()
@@ -47,12 +48,13 @@ public class JwtTokenUtil {
                 .getSubject();
     }
 
-    // Xác nhận token
-    public boolean validateToken(String token) {
+    // Kiểm tra JWT token
+    public boolean validateToken(String token){
         Jwts.parser()
                 .verifyWith((SecretKey) key())
                 .build()
                 .parse(token);
         return true;
+
     }
 }
