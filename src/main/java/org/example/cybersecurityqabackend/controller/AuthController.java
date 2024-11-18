@@ -1,10 +1,7 @@
 package org.example.cybersecurityqabackend.controller;
 
 import lombok.AllArgsConstructor;
-import org.example.cybersecurityqabackend.dto.JwtAuthResponse;
-import org.example.cybersecurityqabackend.dto.LoginDto;
-import org.example.cybersecurityqabackend.dto.RegisterDto;
-import org.example.cybersecurityqabackend.dto.UserDto;
+import org.example.cybersecurityqabackend.dto.*;
 import org.example.cybersecurityqabackend.entity.User;
 import org.example.cybersecurityqabackend.service.auth.AuthService;
 import org.example.cybersecurityqabackend.service.user.UserSerivce;
@@ -21,7 +18,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginDto){
         String token = authService.login(loginDto);
 
         // Lấy thông tin người dùng
@@ -30,17 +27,19 @@ public class AuthController {
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
+        userDto.setName(user.getName());
 
-        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
-        jwtAuthResponse.setAccessToken(token);
-        jwtAuthResponse.setUser(userDto);
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(token);
+        loginResponse.setUser(userDto);
 
-        return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
+        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(registerDto));
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerDto){
+        RegisterResponse registerResponse = authService.register(registerDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registerResponse);
     }
 }
 
