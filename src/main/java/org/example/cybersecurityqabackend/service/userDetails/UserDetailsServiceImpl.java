@@ -15,22 +15,27 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor(onConstructor_ = {@Autowired})
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserRepository userRepository;
+
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
 
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not exists by username or email"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not exists by Username or Email"));
 
-        Set<GrantedAuthority> authorities = user.getRoles()
+        Set<GrantedAuthority> authorities = user
+                .getRoles()
                 .stream()
-                .map((role) -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .map((role) -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toSet());
 
-        return new org.springframework.security.core.userdetails
-                .User(usernameOrEmail, user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(
+                usernameOrEmail,
+                user.getPassword(),
+                authorities
+        );
     }
 }
