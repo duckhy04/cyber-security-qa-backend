@@ -50,12 +50,12 @@ public class User {
         updatedAt = new Date();
     }
 
-    public UserDto getUserDto() {
-        UserDto userDto = new UserDto();
-        userDto.setId(id);
-        userDto.setUsername(username);
-        userDto.setEmail(email);
-        userDto.setName(name);
-        return userDto;
-    }
+//    public UserDto getUserDto() {
+//        UserDto userDto = new UserDto();
+//        userDto.setId(id);
+//        userDto.setUsername(username);
+//        userDto.setEmail(email);
+//        userDto.setName(name);
+//        return userDto;
+//    }
 }
