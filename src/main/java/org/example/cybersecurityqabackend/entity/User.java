@@ -55,6 +55,7 @@ public class User {
         userDto.setId(id);
         userDto.setUsername(username);
         userDto.setEmail(email);
+        userDto.setName(name);
         return userDto;
     }
 }
