@@ -16,7 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -33,7 +35,8 @@ public class AuthServiceImpl implements AuthService {
     public String login(LoginDto loginDto) {
 
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsernameOrEmail(), loginDto.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsernameOrEmail(), loginDto.getPassword()
+        ));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -43,28 +46,23 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String register(RegisterDto registerDto) {
 
-        if (userRepository.existsByUsername(registerDto.getUsername())){
-            throw new RuntimeException("Username is already in use");
-        }
+        Optional<User> user = userRepository.findByUsernameOrEmail(registerDto.getUsername(), registerDto.getEmail());
 
-        if (userRepository.existsByEmail(registerDto.getEmail())) {
-            throw new RuntimeException("Email is already in use");
+        if (user.isPresent()) {
+            throw new RuntimeException("User or email already exists");
         }
-
-        String encodePassword = passwordEncoder.encode(registerDto.getPassword());
 
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName("USER")
+        Role userRole = roleRepository.findByName(("ROLE_USER"))
                 .orElseThrow(() -> new RuntimeException("Role not found"));
         roles.add(userRole);
 
-        User user = new User();
-        user.setUsername(registerDto.getUsername());
-        user.setEmail(registerDto.getEmail());
-        user.setPassword(encodePassword);
-        user.setRoles(roles);
-        userRepository.save(user);
-
+        User userEntity = new User();
+        userEntity.setUsername(registerDto.getUsername());
+        userEntity.setEmail(registerDto.getEmail());
+        userEntity.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        userEntity.setRoles(roles);
+        userRepository.save(userEntity);
         return "Registered successfully";
     }
 }
