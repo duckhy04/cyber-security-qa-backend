@@ -2,6 +2,7 @@ package org.example.cybersecurityqabackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.cybersecurityqabackend.dto.UserDto;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -47,5 +48,13 @@ public class User {
     @PreUpdate
     public void preUpdate() {
         updatedAt = new Date();
+    }
+
+    public UserDto getUserDto() {
+        UserDto userDto = new UserDto();
+        userDto.setId(id);
+        userDto.setUsername(username);
+        userDto.setEmail(email);
+        return userDto;
     }
 }
