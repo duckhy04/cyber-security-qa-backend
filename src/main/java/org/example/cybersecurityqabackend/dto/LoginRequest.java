@@ -3,7 +3,7 @@ package org.example.cybersecurityqabackend.dto;
 import lombok.Data;
 
 @Data
-public class LoginDto {
+public class LoginRequest {
     private String usernameOrEmail;
     private String password;
 }
