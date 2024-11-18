@@ -1,8 +1,9 @@
 package org.example.cybersecurityqabackend.service.auth;
 
 import lombok.AllArgsConstructor;
-import org.example.cybersecurityqabackend.dto.LoginDto;
-import org.example.cybersecurityqabackend.dto.RegisterDto;
+import org.example.cybersecurityqabackend.dto.LoginRequest;
+import org.example.cybersecurityqabackend.dto.RegisterRequest;
+import org.example.cybersecurityqabackend.dto.RegisterResponse;
 import org.example.cybersecurityqabackend.entity.Role;
 import org.example.cybersecurityqabackend.entity.User;
 import org.example.cybersecurityqabackend.repository.RoleRepository;
@@ -31,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
 
     @Override
-    public String login(LoginDto loginDto) {
+    public String login(LoginRequest loginDto) {
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsernameOrEmail(), loginDto.getPassword()
@@ -43,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String register(RegisterDto registerDto) {
+    public RegisterResponse register(RegisterRequest registerDto) {
 
         Optional<User> user = userRepository.findByUsernameOrEmail(registerDto.getUsername(), registerDto.getEmail());
 
@@ -52,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName(("ROLE_USER"))
+        Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
         roles.add(userRole);
 
@@ -62,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
         userEntity.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         userEntity.setRoles(roles);
         userRepository.save(userEntity);
-        return "Registered successfully";
+
+        return new RegisterResponse("Registered successfully", "success");
     }
 }
