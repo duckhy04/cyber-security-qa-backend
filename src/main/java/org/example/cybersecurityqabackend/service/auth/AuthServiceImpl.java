@@ -6,6 +6,7 @@ import org.example.cybersecurityqabackend.dto.RegisterRequest;
 import org.example.cybersecurityqabackend.dto.RegisterResponse;
 import org.example.cybersecurityqabackend.entity.Role;
 import org.example.cybersecurityqabackend.entity.User;
+import org.example.cybersecurityqabackend.exception.UsernameAlreadyExistsException;
 import org.example.cybersecurityqabackend.repository.RoleRepository;
 import org.example.cybersecurityqabackend.repository.UserRepository;
 import org.example.cybersecurityqabackend.util.JwtTokenUtil;
@@ -49,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<User> user = userRepository.findByUsernameOrEmail(registerDto.getUsername(), registerDto.getEmail());
 
         if (user.isPresent()) {
-            throw new RuntimeException("User or email already exists");
+            throw new UsernameAlreadyExistsException("Username or email already exists");
         }
 
         Set<Role> roles = new HashSet<>();
