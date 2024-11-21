@@ -1,7 +1,7 @@
 package org.example.cybersecurityqabackend.service.user;
 
 import org.example.cybersecurityqabackend.entity.User;
-import org.example.cybersecurityqabackend.exception.ResourceNotFoundException;
+import org.example.cybersecurityqabackend.exception.CustomResourceNotFoundException;
 import org.example.cybersecurityqabackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +17,6 @@ public class UserServiceImpl implements UserSerivce{
     @Override
     public User findByUsername(String username, String email) {
         return userRepository.findByUsernameOrEmail(username, email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new CustomResourceNotFoundException("User not found"));
     }
 }
