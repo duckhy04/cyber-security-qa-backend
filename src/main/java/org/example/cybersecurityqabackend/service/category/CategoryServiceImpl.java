@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.cybersecurityqabackend.dto.CategoryDto;
 import org.example.cybersecurityqabackend.dto.SubCategoriesDto;
 import org.example.cybersecurityqabackend.entity.Category;
+import org.example.cybersecurityqabackend.exception.CustomInternalServerErrorException;
 import org.example.cybersecurityqabackend.exception.CustomResourceNotFoundException;
 import org.example.cybersecurityqabackend.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
-        // Tạo Category entity từ DTO
         Category category = new Category();
         category.setId(categoryDto.getId());
         category.setName(categoryDto.getName());
@@ -33,8 +33,44 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         Category savedCategory = categoryRepository.save(category);
-
         return toDto(savedCategory);
+    }
+
+    @Override
+    public CategoryDto updateCategory(Long categoryId, CategoryDto categoryDto) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomResourceNotFoundException("Category not found"));
+
+        category.setName(categoryDto.getName());
+        category.setDescription(categoryDto.getDescription());
+
+        if (categoryDto.getParentId() != null) {
+            if (categoryDto.getParentId().equals(category.getId())) {
+                throw new CustomInternalServerErrorException("A category cannot be its own parent");
+            }
+            Category parentCategory = categoryRepository.findById(categoryDto.getParentId())
+                    .orElseThrow(() -> new CustomResourceNotFoundException("Parent category not found"));
+            category.setParent(parentCategory);
+        } else {
+            category.setParent(null);
+        }
+
+        Category updatedCategory = categoryRepository.save(category);
+        return toDto(updatedCategory);
+    }
+
+    @Override
+    public void deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomResourceNotFoundException("Category not found"));
+
+        categoryRepository.delete(category);
+    }
+
+    @Override
+    public List<CategoryDto> getCategoriesWithSubcategories() {
+        List<Category> categories = categoryRepository.findByParentIsNull();
+        return mapToDTO(categories);
     }
 
     private CategoryDto toDto(Category category) {
@@ -44,57 +80,31 @@ public class CategoryServiceImpl implements CategoryService {
         dto.setDescription(category.getDescription());
         dto.setParentId(category.getParent() != null ? category.getParent().getId() : null);
 
-        // Ánh xạ subcategories dưới dạng SubCategoriesDto
         if (category.getSubcategories() != null && !category.getSubcategories().isEmpty()) {
-            List<SubCategoriesDto> subcategoryDtos = new ArrayList<>();
-            for (Category subcategory : category.getSubcategories()) {
-                SubCategoriesDto subcategoryDto = new SubCategoriesDto();
-                subcategoryDto.setId(subcategory.getId());
-                subcategoryDto.setName(subcategory.getName());
-                subcategoryDto.setDescription(subcategory.getDescription());
-                subcategoryDtos.add(subcategoryDto);
-            }
-            dto.setSubcategories(subcategoryDtos);
+            dto.setSubcategories(mapCategoriesToSubDtos(category.getSubcategories()));
         }
 
         return dto;
     }
 
-    @Override
-    public List<CategoryDto> getCategoriesWithSubcategories() {
-        List<Category> categories = categoryRepository.findByParentIsNull();
-        return mapToDTO(categories);
+    private List<SubCategoriesDto> mapCategoriesToSubDtos(List<Category> categories) {
+        List<SubCategoriesDto> subcategoryDtos = new ArrayList<>();
+        for (Category category : categories) {
+            SubCategoriesDto dto = new SubCategoriesDto();
+            dto.setId(category.getId());
+            dto.setName(category.getName());
+            dto.setDescription(category.getDescription());
+            dto.setParentId(category.getParent() != null ? category.getParent().getId() : null);
+            subcategoryDtos.add(dto);
+        }
+        return subcategoryDtos;
     }
 
     private List<CategoryDto> mapToDTO(List<Category> categories) {
         List<CategoryDto> categoryDTOs = new ArrayList<>();
         for (Category category : categories) {
-            CategoryDto dto = new CategoryDto();
-            dto.setId(category.getId());
-            dto.setName(category.getName());
-            dto.setDescription(category.getDescription());
-
-            // Ánh xạ các subcategories sang SubCategoriesDto
-            if (category.getSubcategories() != null && !category.getSubcategories().isEmpty()) {
-                List<SubCategoriesDto> subcategoryDTOs = mapToSimpleDTO(category.getSubcategories());
-                dto.setSubcategories(subcategoryDTOs);
-            }
-
-            categoryDTOs.add(dto);
+            categoryDTOs.add(toDto(category));
         }
         return categoryDTOs;
     }
-
-    private List<SubCategoriesDto> mapToSimpleDTO(List<Category> subcategories) {
-        List<SubCategoriesDto> subcategoryDTOs = new ArrayList<>();
-        for (Category subcategory : subcategories) {
-            SubCategoriesDto simpleDto = new SubCategoriesDto();
-            simpleDto.setId(subcategory.getId());
-            simpleDto.setName(subcategory.getName());
-            simpleDto.setDescription(subcategory.getDescription());
-            subcategoryDTOs.add(simpleDto);
-        }
-        return subcategoryDTOs;
-    }
-
 }
