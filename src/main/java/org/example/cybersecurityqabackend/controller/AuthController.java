@@ -21,7 +21,6 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginDto){
         String token = authService.login(loginDto);
 
-        // Lấy thông tin người dùng
         User user = userSerivce.findByUsername(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());

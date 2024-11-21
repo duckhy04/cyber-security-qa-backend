@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.cybersecurityqabackend.dto.CategoryDto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -20,15 +23,10 @@ public class Category extends Time{
     @Column(length = 30)
     private String description;
 
-    @Column(name = "parent_id", nullable = true)
-    private Long parentId;
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Category parent;
 
-    public CategoryDto toDto() {
-        CategoryDto dto = new CategoryDto();
-        dto.setId(id);
-        dto.setName(name);
-        dto.setDescription(description);
-        dto.setParentId(parentId);
-        return dto;
-    }
+    @OneToMany(mappedBy = "parent")
+    private List<Category> subcategories;
 }
