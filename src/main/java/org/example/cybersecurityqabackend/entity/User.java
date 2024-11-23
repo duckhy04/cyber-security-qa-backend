@@ -2,11 +2,9 @@ package org.example.cybersecurityqabackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.cybersecurityqabackend.dto.UserDto;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.Date;
 import java.util.Set;
 
 @Data
