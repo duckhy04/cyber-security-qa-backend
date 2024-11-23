@@ -2,7 +2,6 @@ package org.example.cybersecurityqabackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.cybersecurityqabackend.dto.QuestionDto;
-import org.example.cybersecurityqabackend.entity.Question;
 import org.example.cybersecurityqabackend.service.question.QuestionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
