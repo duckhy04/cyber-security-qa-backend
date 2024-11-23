@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class CategoryDto {
     private Long id;
@@ -13,9 +14,11 @@ public class CategoryDto {
 
     private String description;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long parentId;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String parentName;
+
     private List<SubCategoriesDto> subcategories;
+
+    private List<QuestionDto> questions;
 }
