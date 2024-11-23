@@ -2,6 +2,7 @@ package org.example.cybersecurityqabackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.cybersecurityqabackend.dto.UserDto;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -34,4 +35,13 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<Role> roles;
+
+    public UserDto toDto() {
+        UserDto dto = new UserDto();
+        dto.setId(id);
+        dto.setName(name);
+        dto.setUsername(username);
+        dto.setEmail(email);
+        return dto;
+    }
 }
