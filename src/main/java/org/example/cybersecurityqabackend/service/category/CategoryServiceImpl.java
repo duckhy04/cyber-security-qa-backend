@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         Category savedCategory = categoryRepository.save(category);
-        return toDto(savedCategory);
+        return savedCategory.toDto();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         Category updatedCategory = categoryRepository.save(category);
-        return toDto(updatedCategory);
+        return updatedCategory.toDto();
     }
 
     @Override
@@ -70,41 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> getCategoriesWithSubcategories() {
         List<Category> categories = categoryRepository.findByParentIsNull();
-        return mapToDTO(categories);
-    }
-
-    private CategoryDto toDto(Category category) {
-        CategoryDto dto = new CategoryDto();
-        dto.setId(category.getId());
-        dto.setName(category.getName());
-        dto.setDescription(category.getDescription());
-        dto.setParentId(category.getParent() != null ? category.getParent().getId() : null);
-
-        if (category.getSubcategories() != null && !category.getSubcategories().isEmpty()) {
-            dto.setSubcategories(mapCategoriesToSubDtos(category.getSubcategories()));
-        }
-
-        return dto;
-    }
-
-    private List<SubCategoriesDto> mapCategoriesToSubDtos(List<Category> categories) {
-        List<SubCategoriesDto> subcategoryDtos = new ArrayList<>();
-        for (Category category : categories) {
-            SubCategoriesDto dto = new SubCategoriesDto();
-            dto.setId(category.getId());
-            dto.setName(category.getName());
-            dto.setDescription(category.getDescription());
-            dto.setParentId(category.getParent() != null ? category.getParent().getId() : null);
-            subcategoryDtos.add(dto);
-        }
-        return subcategoryDtos;
-    }
-
-    private List<CategoryDto> mapToDTO(List<Category> categories) {
-        List<CategoryDto> categoryDTOs = new ArrayList<>();
-        for (Category category : categories) {
-            categoryDTOs.add(toDto(category));
-        }
-        return categoryDTOs;
+        return categories.stream().map(Category::toDto).toList();
     }
 }
+
