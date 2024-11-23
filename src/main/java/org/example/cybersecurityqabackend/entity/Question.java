@@ -9,7 +9,6 @@ import org.example.cybersecurityqabackend.dto.QuestionDto;
 import org.example.cybersecurityqabackend.dto.UserDto;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
