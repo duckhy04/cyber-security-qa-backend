@@ -2,7 +2,6 @@ package org.example.cybersecurityqabackend.service.category;
 
 import lombok.AllArgsConstructor;
 import org.example.cybersecurityqabackend.dto.CategoryDto;
-import org.example.cybersecurityqabackend.dto.SubCategoriesDto;
 import org.example.cybersecurityqabackend.entity.Category;
 import org.example.cybersecurityqabackend.exception.CustomInternalServerErrorException;
 import org.example.cybersecurityqabackend.exception.CustomResourceNotFoundException;
@@ -10,7 +9,6 @@ import org.example.cybersecurityqabackend.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
