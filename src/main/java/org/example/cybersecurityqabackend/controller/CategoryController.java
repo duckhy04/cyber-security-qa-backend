@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/category")
 @RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/categories")
+    @GetMapping("/get")
     public List<CategoryDto> getCategoriesWithSubcategories() {
         return categoryService.getCategoriesWithSubcategories();
     }
 
-    @PostMapping("/category/save")
+    @PostMapping("/save")
     public CategoryDto createCategory(@RequestBody CategoryDto categoryDto) {
         return categoryService.createCategory(categoryDto);
     }
 
-    @PutMapping("/category/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CategoryDto> updateCategory(
             @PathVariable Long id,
             @RequestBody CategoryDto categoryDto) {
@@ -33,7 +33,7 @@ public class CategoryController {
         return ResponseEntity.ok(updatedCategory);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
