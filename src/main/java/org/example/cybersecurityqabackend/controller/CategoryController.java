@@ -2,6 +2,8 @@ package org.example.cybersecurityqabackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.cybersecurityqabackend.dto.CategoryDto;
+import org.example.cybersecurityqabackend.entity.Question;
+import org.example.cybersecurityqabackend.repository.QuestionRepository;
 import org.example.cybersecurityqabackend.service.category.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,21 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final QuestionRepository questionRepository;
 
     @GetMapping("/get")
     public List<CategoryDto> getCategoriesWithSubcategories() {
         return categoryService.getCategoriesWithSubcategories();
+    }
+
+    @GetMapping("/get/{id}")
+    public CategoryDto getCategoryById(@PathVariable Long id) {
+        return categoryService.getCategoryById(id);
+    }
+
+    @GetMapping("/get/{categoryId}/questions")
+    public List<Question> getQuestionsByCategory(@PathVariable Long categoryId) {
+        return questionRepository.findByCategoryId(categoryId);
     }
 
     @PostMapping("/save")
