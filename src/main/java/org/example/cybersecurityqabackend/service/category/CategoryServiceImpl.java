@@ -70,5 +70,12 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = categoryRepository.findByParentIsNull();
         return categories.stream().map(Category::toDto).toList();
     }
+
+    @Override
+    public CategoryDto getCategoryById(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomResourceNotFoundException("Category not found"));
+        return category.toDto();
+    }
 }
 
