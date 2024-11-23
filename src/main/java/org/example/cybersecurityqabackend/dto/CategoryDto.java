@@ -16,5 +16,6 @@ public class CategoryDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long parentId;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<SubCategoriesDto> subcategories;
 }
